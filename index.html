@@ -1035,10 +1035,23 @@
             adminPin: localStorage.getItem('nidaa_admin_pin') || '9090',
             branding: { ...DEFAULT_BRANDING, ...savedBranding },
             customerScreen: { ...DEFAULT_CUSTOMER_SCREEN, ...savedCustomerScreen },
+            fallbackBrokers: [
+                localStorage.getItem('nidaa_broker') || 'wss://broker.emqx.io:8084/mqtt',
+                'wss://broker.hivemq.com:8884/mqtt',
+                'wss://test.mosquitto.org:8081/mqtt'
+            ].filter((v, i, a) => Boolean(v) && a.indexOf(v) === i),
+            activeBrokerIndex: 0,
             mqttConnected: false,
             soundEnabled: true,
-            completedCount: 0,
-            activeCalls: {},
+            completedCount: parseInt(localStorage.getItem(`plus90_completed_${defaultRoomId}`) || '0', 10) || 0,
+            activeCalls: (function() {
+                try {
+                    const raw = localStorage.getItem(`plus90_active_calls_${defaultRoomId}`);
+                    return raw ? JSON.parse(raw) : {};
+                } catch (e) {
+                    return {};
+                }
+            })(),
             customerCurrentCallId: null
         };
 
@@ -1677,6 +1690,15 @@
             }
         } catch (e) {}
 
+        let mqttFailoverTimer = null;
+
+        function persistCallsState() {
+            try {
+                localStorage.setItem(`plus90_active_calls_${state.roomId}`, JSON.stringify(state.activeCalls));
+                localStorage.setItem(`plus90_completed_${state.roomId}`, String(state.completedCount || 0));
+            } catch (e) {}
+        }
+
         function updateMQTTStatusUI(status) {
             const staffDot = document.getElementById('staff-mqtt-dot');
             const staffText = document.getElementById('staff-mqtt-text');
@@ -1685,7 +1707,7 @@
 
             if (status === 'connected') {
                 if (staffDot) staffDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400';
-                if (staffText) staffText.textContent = 'متصل MQTT';
+                if (staffText) staffText.textContent = 'متصل سحابي (4G / Wi-Fi)';
                 if (custDot) custDot.className = 'w-2 h-2 rounded-full bg-emerald-500';
                 if (custText) custText.textContent = 'متصل مباشرة';
             } else if (status === 'connecting') {
@@ -1694,32 +1716,60 @@
                 if (custDot) custDot.className = 'w-2 h-2 rounded-full bg-amber-400 animate-pulse';
                 if (custText) custText.textContent = 'جاري الاتصال...';
             } else {
-                if (staffDot) staffDot.className = 'w-2.5 h-2.5 rounded-full bg-blue-400';
-                if (staffText) staffText.textContent = 'وضع المزامنة المحلية';
-                if (custDot) custDot.className = 'w-2 h-2 rounded-full bg-emerald-500';
-                if (custText) custText.textContent = 'جاهز للخدمة';
+                if (staffDot) staffDot.className = 'w-2.5 h-2.5 rounded-full bg-amber-500';
+                if (staffText) staffText.textContent = 'إعادة ربط السحابة...';
+                if (custDot) custDot.className = 'w-2 h-2 rounded-full bg-amber-500';
+                if (custText) custText.textContent = 'إعادة ربط...';
             }
         }
 
+        function buildBrokerCandidates() {
+            const list = [
+                state.brokerUrl,
+                'wss://broker.emqx.io:8084/mqtt',
+                'wss://broker.hivemq.com:8884/mqtt',
+                'wss://test.mosquitto.org:8081/mqtt'
+            ];
+            return list.filter((u, idx) => typeof u === 'string' && u.trim().length > 0 && list.indexOf(u) === idx);
+        }
+
         function initMQTT() {
+            clearTimeout(mqttFailoverTimer);
             updateMQTTStatusUI('connecting');
             if (mqttClient) {
                 try { mqttClient.end(true); } catch (e) {}
+                mqttClient = null;
             }
             if (typeof mqtt === 'undefined') {
                 updateMQTTStatusUI('offline');
+                mqttFailoverTimer = setTimeout(initMQTT, 4000);
                 return;
             }
+
+            const candidates = buildBrokerCandidates();
+            const targetUrl = candidates[state.activeBrokerIndex % candidates.length];
+
             try {
-                const clientId = 'nidaa_' + Math.random().toString(16).substr(2, 8);
-                mqttClient = mqtt.connect(state.brokerUrl, {
+                const clientId = 'plus90_' + Date.now().toString(36) + '_' + Math.random().toString(16).substr(2, 6);
+                mqttClient = mqtt.connect(targetUrl, {
                     clientId,
                     clean: true,
-                    connectTimeout: 8000,
-                    reconnectPeriod: 4000
+                    keepalive: 25,
+                    connectTimeout: 6000,
+                    reconnectPeriod: 3000
                 });
+
+                mqttFailoverTimer = setTimeout(() => {
+                    if (!state.mqttConnected && candidates.length > 1) {
+                        state.activeBrokerIndex = (state.activeBrokerIndex + 1) % candidates.length;
+                        initMQTT();
+                    }
+                }, 6500);
+
                 mqttClient.on('connect', () => {
+                    clearTimeout(mqttFailoverTimer);
                     state.mqttConnected = true;
+                    state.brokerUrl = targetUrl;
                     updateMQTTStatusUI('connected');
                     mqttClient.subscribe(`${state.baseTopic}/tables/#`, { qos: 1 });
                 });
@@ -1739,22 +1789,35 @@
             } catch (err) {
                 state.mqttConnected = false;
                 updateMQTTStatusUI('offline');
+                mqttFailoverTimer = setTimeout(initMQTT, 4000);
             }
         }
 
         function publishEvent(subTopic, payload) {
             const eventMsg = {
                 ...payload,
+                roomId: state.roomId,
                 eventId: payload.eventId || ('evt_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6))
             };
             handleIncomingEvent(eventMsg);
             if (localChannel) {
                 try { localChannel.postMessage(eventMsg); } catch (e) {}
             }
-            if (mqttClient && state.mqttConnected) {
+            if (mqttClient && mqttClient.connected) {
                 try {
-                    mqttClient.publish(`${state.baseTopic}/${subTopic}`, JSON.stringify(eventMsg), { qos: 1 });
+                    mqttClient.publish(`${state.baseTopic}/${subTopic}`, JSON.stringify(eventMsg), { qos: 1, retain: false });
                 } catch (e) {}
+            } else {
+                if (!mqttClient || !mqttClient.reconnecting) {
+                    initMQTT();
+                }
+                setTimeout(() => {
+                    if (mqttClient && mqttClient.connected) {
+                        try {
+                            mqttClient.publish(`${state.baseTopic}/${subTopic}`, JSON.stringify(eventMsg), { qos: 1, retain: false });
+                        } catch (e) {}
+                    }
+                }, 1200);
             }
         }
 
@@ -1779,6 +1842,7 @@
                     timestamp: data.timestamp || Date.now(),
                     status: 'pending'
                 };
+                persistCallsState();
                 if (isNew && state.role === 'staff') {
                     playNotificationChime('new_call');
                     const reqLabel = REQUEST_TYPES[data.type]?.label || 'طلب خدمة';
@@ -1790,6 +1854,7 @@
             } else if (data.action === 'ACK_CALL') {
                 if (state.activeCalls[data.table]) {
                     state.activeCalls[data.table].status = 'acknowledged';
+                    persistCallsState();
                     if (state.role === 'customer' && Number(data.table) === state.customerTable) {
                         playNotificationChime('ack');
                         showToast('النادل استلم طلبك وهو في الطريق إليك الآن!', 'emerald');
@@ -1800,6 +1865,7 @@
                 if (state.activeCalls[data.table]) {
                     delete state.activeCalls[data.table];
                     state.completedCount++;
+                    persistCallsState();
                     if (state.role === 'customer' && Number(data.table) === state.customerTable) {
                         showToast('تم تنفيذ طلبك بنجاح، نتمنى لك وقتاً ممتعاً!', 'emerald');
                     }
@@ -1807,6 +1873,7 @@
             } else if (data.action === 'CANCEL_CALL') {
                 if (state.activeCalls[data.table]) {
                     delete state.activeCalls[data.table];
+                    persistCallsState();
                 }
             }
 
@@ -2058,6 +2125,12 @@
                 previewLink.href = `${window.location.pathname}?table=1&room=${encodeURIComponent(state.roomId)}`;
             }
 
+            try {
+                const rawCalls = localStorage.getItem(`plus90_active_calls_${state.roomId}`);
+                state.activeCalls = rawCalls ? JSON.parse(rawCalls) : {};
+                state.completedCount = parseInt(localStorage.getItem(`plus90_completed_${state.roomId}`) || '0', 10) || 0;
+            } catch (e) {}
+            state.activeBrokerIndex = 0;
             initMQTT();
             generateQRCards();
             showToast(`تم التبديل إلى ${state.roomId}`, 'amber');
@@ -2227,6 +2300,28 @@
             initMQTT();
             if (state.role === 'staff' && 'Notification' in window && Notification.permission === 'default') {
                 Notification.requestPermission().catch(() => {});
+            }
+        });
+
+        window.addEventListener('online', () => {
+            state.activeBrokerIndex = 0;
+            initMQTT();
+            showToast('عاد الاتصال بالإنترنت — جاري مزامنة النداءات', 'emerald');
+        });
+
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && (!mqttClient || !mqttClient.connected)) {
+                initMQTT();
+            }
+            if (!document.hidden && state.role === 'staff') {
+                try {
+                    const rawCalls = localStorage.getItem(`plus90_active_calls_${state.roomId}`);
+                    if (rawCalls) {
+                        const savedCalls = JSON.parse(rawCalls);
+                        state.activeCalls = { ...savedCalls, ...state.activeCalls };
+                    }
+                } catch (e) {}
+                renderWaiterDashboard();
             }
         });
     </script>
