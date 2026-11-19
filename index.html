@@ -367,6 +367,25 @@
          2. WAITER & STAFF DASHBOARD VIEW
     ====================================================================== -->
     <main id="view-waiter" class="hidden flex-1 max-w-7xl w-full mx-auto px-4 py-6">
+        <!-- Staff Mode Switcher: Live Calls vs Admin Dashboard -->
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-5 bg-[#1b1b1f] p-2.5 rounded-2xl border border-white/10">
+            <div class="flex items-center gap-2">
+                <button id="tab-waiter-calls" onclick="switchStaffSubView('calls')" class="px-4 py-2 rounded-xl bg-[#1877f2] text-white font-extrabold text-xs sm:text-sm transition flex items-center gap-2">
+                    <i class="fa-solid fa-bell-concierge"></i>
+                    <span>نداءات الطاولات المباشرة</span>
+                </button>
+                <button id="tab-admin-dashboard" onclick="openAdminDashboardTab()" class="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-[#f4ebd9] font-extrabold text-xs sm:text-sm transition flex items-center gap-2 border border-white/10">
+                    <i class="fa-solid fa-chart-line text-[#60a5fa]"></i>
+                    <span>داش بورد الإدارة والتحكم</span>
+                    <span id="dash-lock-badge" class="text-[10px] bg-black/40 text-[#93c5fd] px-1.5 py-0.5 rounded-md">أدمن</span>
+                </button>
+            </div>
+            <div class="text-xs text-slate-400 px-2">
+                القناة النشطة: <span id="dash-active-room-label" class="font-bold text-[#f4ebd9]">plus-ninety-lounge</span>
+            </div>
+        </div>
+
+        <div id="waiter-live-calls-section">
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-3.5 mb-6">
             <div class="bg-[#1b1b1f] p-4 rounded-2xl shadow-sm border border-white/10 flex items-center justify-between">
                 <div>
@@ -426,6 +445,128 @@
         </div>
 
         <div id="waiter-calls-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </div>
+
+        <!-- =================================================================
+             ADMIN DASHBOARD SECTION (Linked to Branding, Customer Screen & Calls)
+        ================================================================== -->
+        <section id="admin-dashboard-section" class="hidden space-y-6 animate-slide-in">
+            <!-- Top KPI Cards -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
+                <div class="bg-[#1b1b1f] p-4 rounded-2xl border border-white/10">
+                    <p class="text-xs font-bold text-slate-400">إجمالي الطلبات المسجلة</p>
+                    <p id="dash-total-requests" class="text-2xl font-black text-white mt-1">0</p>
+                    <p class="text-[11px] text-emerald-400 mt-1">مرتبط بالبث المباشر MQTT</p>
+                </div>
+                <div class="bg-[#1b1b1f] p-4 rounded-2xl border border-white/10">
+                    <p class="text-xs font-bold text-slate-400">النداءات النشطة الآن</p>
+                    <p id="dash-active-calls" class="text-2xl font-black text-amber-300 mt-1">0</p>
+                    <p class="text-[11px] text-slate-400 mt-1">بانتظار أو قيد التنفيذ</p>
+                </div>
+                <div class="bg-[#1b1b1f] p-4 rounded-2xl border border-white/10">
+                    <p class="text-xs font-bold text-slate-400">أزرار الخدمات الظاهرة</p>
+                    <p id="dash-visible-services" class="text-2xl font-black text-[#60a5fa] mt-1">4 / 4</p>
+                    <p class="text-[11px] text-slate-400 mt-1">في شاشة العميل</p>
+                </div>
+                <div class="bg-[#1b1b1f] p-4 rounded-2xl border border-white/10">
+                    <p class="text-xs font-bold text-slate-400">حالة هوية المكان</p>
+                    <p id="dash-brand-status" class="text-sm font-black text-[#f4ebd9] mt-1.5 truncate">Plus Ninety Lounge</p>
+                    <p id="dash-brand-link-status" class="text-[11px] text-[#93c5fd] mt-1 truncate">linktr.ee/plusninetylounge</p>
+                </div>
+            </div>
+
+            <!-- Quick Control Cards Linked to Existing Modals & Live Preview -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <div class="bg-[#1b1b1f] rounded-3xl p-5 border border-white/10 flex flex-col justify-between gap-4">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-extrabold px-2.5 py-1 rounded-full bg-[#1877f2]/20 text-[#93c5fd]">الهوية والروابط</span>
+                            <i class="fa-solid fa-link text-[#60a5fa]"></i>
+                        </div>
+                        <h3 class="font-black text-white text-base">تعديل اللوجو واللينك والسوشيال</h3>
+                        <p class="text-xs text-slate-400 mt-1">تحديث اسم المكان، نص أو صورة اللوجو، اللينك الرئيسي، وحسابات فيسبوك وانستجرام وتيك توك.</p>
+                    </div>
+                    <button onclick="openBrandingModal()" class="w-full py-2.5 px-4 rounded-xl bg-[#1877f2] hover:bg-blue-500 text-white font-extrabold text-xs transition">
+                        فتح محرر اللوجو واللينك
+                    </button>
+                </div>
+
+                <div class="bg-[#1b1b1f] rounded-3xl p-5 border border-white/10 flex flex-col justify-between gap-4">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-extrabold px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300">شاشة العميل</span>
+                            <i class="fa-solid fa-arrows-up-down text-amber-300"></i>
+                        </div>
+                        <h3 class="font-black text-white text-base">تعديل الكلام وترتيب الأيقونات</h3>
+                        <p class="text-xs text-slate-400 mt-1">إعادة ترتيب أيقونات الخدمات، تغيير نصوص الأزرار والعناوين والطلبات السريعة، وإظهار أو إخفاء العناصر.</p>
+                    </div>
+                    <button onclick="openCustomerScreenModal()" class="w-full py-2.5 px-4 rounded-xl plus90-cream hover:brightness-95 font-extrabold text-xs transition">
+                        فتح إعدادات شاشة العميل
+                    </button>
+                </div>
+
+                <div class="bg-[#1b1b1f] rounded-3xl p-5 border border-white/10 flex flex-col justify-between gap-4">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-extrabold px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300">الطاولات والاتصال</span>
+                            <i class="fa-solid fa-qrcode text-emerald-300"></i>
+                        </div>
+                        <h3 class="font-black text-white text-base">رموز QR وإعدادات MQTT</h3>
+                        <p class="text-xs text-slate-400 mt-1">توليد وطباعة رموز QR للطاولات والغرف أو تعديل وسيط MQTT وباسورد الأدمن والويتر.</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="openQRModal()" class="py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs transition">
+                            رموز QR
+                        </button>
+                        <button onclick="openSettingsModal()" class="py-2.5 px-3 rounded-xl bg-white/10 hover:bg-white/15 text-white font-extrabold text-xs transition">
+                            إعدادات MQTT
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Breakdown by Service Type + Live Customer Screen Snapshot -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div class="bg-[#1b1b1f] rounded-3xl p-5 border border-white/10">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-black text-white text-base">توزيع الطلبات حسب نوع الخدمة</h3>
+                        <button onclick="clearCallHistoryLog()" class="text-xs font-bold text-rose-300 hover:text-rose-200 bg-rose-500/10 px-3 py-1 rounded-xl transition">
+                            تصفير السجل
+                        </button>
+                    </div>
+                    <div id="dash-service-breakdown" class="space-y-3 text-xs"></div>
+                </div>
+
+                <div class="bg-[#1b1b1f] rounded-3xl p-5 border border-white/10">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="font-black text-white text-base">ملخص إعدادات شاشة العميل الحالية</h3>
+                        <a id="dash-preview-customer-btn" href="?table=1" target="_blank" class="text-xs font-bold text-[#60a5fa] hover:underline">
+                            معاينة حية <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                    </div>
+                    <div id="dash-customer-config-summary" class="space-y-2 text-xs text-slate-300"></div>
+                </div>
+            </div>
+
+            <!-- Recent Calls Log Table -->
+            <div class="bg-[#1b1b1f] rounded-3xl p-5 border border-white/10">
+                <h3 class="font-black text-white text-base mb-3">سجل النداءات والطلبات الأخيرة</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right text-xs">
+                        <thead>
+                            <tr class="border-b border-white/10 text-slate-400">
+                                <th class="py-2.5 px-3">الطاولة</th>
+                                <th class="py-2.5 px-3">الخدمة</th>
+                                <th class="py-2.5 px-3">الملاحظة</th>
+                                <th class="py-2.5 px-3">الحالة</th>
+                                <th class="py-2.5 px-3">الوقت</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dash-calls-history-tbody" class="divide-y divide-white/5"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- =====================================================================
@@ -1035,23 +1176,20 @@
             adminPin: localStorage.getItem('nidaa_admin_pin') || '9090',
             branding: { ...DEFAULT_BRANDING, ...savedBranding },
             customerScreen: { ...DEFAULT_CUSTOMER_SCREEN, ...savedCustomerScreen },
-            fallbackBrokers: [
-                localStorage.getItem('nidaa_broker') || 'wss://broker.emqx.io:8084/mqtt',
-                'wss://broker.hivemq.com:8884/mqtt',
-                'wss://test.mosquitto.org:8081/mqtt'
-            ].filter((v, i, a) => Boolean(v) && a.indexOf(v) === i),
-            activeBrokerIndex: 0,
             mqttConnected: false,
             soundEnabled: true,
-            completedCount: parseInt(localStorage.getItem(`plus90_completed_${defaultRoomId}`) || '0', 10) || 0,
-            activeCalls: (function() {
-                try {
-                    const raw = localStorage.getItem(`plus90_active_calls_${defaultRoomId}`);
-                    return raw ? JSON.parse(raw) : {};
-                } catch (e) {
-                    return {};
-                }
-            })(),
+            completedCount: 0,
+            totalRecordedCount: 0,
+            serviceCounts: {
+                call_waiter: 0,
+                request_bill: 0,
+                request_menu: 0,
+                clean_table: 0,
+                custom_note: 0
+            },
+            callHistory: [],
+            staffSubView: 'calls',
+            activeCalls: {},
             customerCurrentCallId: null
         };
 
@@ -1160,17 +1298,212 @@
             }
         }
 
+
+
+        const DASHBOARD_STORAGE_KEY_PREFIX = 'plus90_dashboard_state_';
+
+        function getDashboardStorageKey() {
+            return `${DASHBOARD_STORAGE_KEY_PREFIX}${state.roomId || 'default'}`;
+        }
+
+        function saveDashboardState() {
+            try {
+                const payload = {
+                    activeCalls: state.activeCalls || {},
+                    completedCount: Number(state.completedCount || 0),
+                    totalRecordedCount: Number(state.totalRecordedCount || 0),
+                    serviceCounts: state.serviceCounts || {
+                        call_waiter: 0,
+                        request_bill: 0,
+                        request_menu: 0,
+                        clean_table: 0,
+                        custom_note: 0
+                    },
+                    callHistory: Array.isArray(state.callHistory) ? state.callHistory.slice(0, 200) : []
+                };
+                localStorage.setItem(getDashboardStorageKey(), JSON.stringify(payload));
+            } catch (e) {}
+        }
+
+        function loadDashboardState() {
+            try {
+                const raw = localStorage.getItem(getDashboardStorageKey());
+                if (!raw) return;
+                const parsed = JSON.parse(raw);
+                if (!parsed || typeof parsed !== 'object') return;
+
+                if (parsed.activeCalls && typeof parsed.activeCalls === 'object') {
+                    state.activeCalls = parsed.activeCalls;
+                }
+                if (typeof parsed.completedCount === 'number') {
+                    state.completedCount = parsed.completedCount;
+                }
+                if (typeof parsed.totalRecordedCount === 'number') {
+                    state.totalRecordedCount = parsed.totalRecordedCount;
+                }
+                if (parsed.serviceCounts && typeof parsed.serviceCounts === 'object') {
+                    state.serviceCounts = {
+                        call_waiter: Number(parsed.serviceCounts.call_waiter || 0),
+                        request_bill: Number(parsed.serviceCounts.request_bill || 0),
+                        request_menu: Number(parsed.serviceCounts.request_menu || 0),
+                        clean_table: Number(parsed.serviceCounts.clean_table || 0),
+                        custom_note: Number(parsed.serviceCounts.custom_note || 0)
+                    };
+                }
+                if (Array.isArray(parsed.callHistory)) {
+                    state.callHistory = parsed.callHistory;
+                }
+            } catch (e) {}
+        }
+
         function updateAdminBadgeUI() {
             const pill = document.getElementById('admin-lock-pill');
-            if (!pill) return;
-            if (state.staffLevel === 'admin') {
-                pill.textContent = 'مفتوح';
-                pill.className = 'text-[10px] bg-emerald-500/30 text-emerald-200 px-1.5 py-0.5 rounded-md';
-            } else {
-                pill.textContent = 'أدمن';
-                pill.className = 'text-[10px] bg-black/30 px-1.5 py-0.5 rounded-md';
+            const dashBadge = document.getElementById('dash-lock-badge');
+            const isAdmin = state.staffLevel === 'admin';
+            if (pill) {
+                pill.textContent = isAdmin ? 'مفتوح' : 'أدمن';
+                pill.className = isAdmin
+                    ? 'text-[10px] bg-emerald-500/30 text-emerald-200 px-1.5 py-0.5 rounded-md'
+                    : 'text-[10px] bg-black/30 px-1.5 py-0.5 rounded-md';
+            }
+            if (dashBadge) {
+                dashBadge.textContent = isAdmin ? 'مفتوح' : 'أدمن';
+                dashBadge.className = isAdmin
+                    ? 'text-[10px] bg-emerald-500/25 text-emerald-200 px-1.5 py-0.5 rounded-md'
+                    : 'text-[10px] bg-black/40 text-[#93c5fd] px-1.5 py-0.5 rounded-md';
             }
         }
+
+        function switchStaffSubView(subView) {
+            state.staffSubView = subView === 'dashboard' ? 'dashboard' : 'calls';
+            const callsSec = document.getElementById('waiter-live-calls-section');
+            const dashSec = document.getElementById('admin-dashboard-section');
+            const tabCalls = document.getElementById('tab-waiter-calls');
+            const tabDash = document.getElementById('tab-admin-dashboard');
+
+            if (state.staffSubView === 'dashboard') {
+                if (callsSec) callsSec.classList.add('hidden');
+                if (dashSec) dashSec.classList.remove('hidden');
+                if (tabCalls) tabCalls.className = 'px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-[#f4ebd9] font-extrabold text-xs sm:text-sm transition flex items-center gap-2 border border-white/10';
+                if (tabDash) tabDash.className = 'px-4 py-2 rounded-xl bg-[#1877f2] text-white font-extrabold text-xs sm:text-sm transition flex items-center gap-2';
+                renderAdminDashboard();
+            } else {
+                if (dashSec) dashSec.classList.add('hidden');
+                if (callsSec) callsSec.classList.remove('hidden');
+                if (tabCalls) tabCalls.className = 'px-4 py-2 rounded-xl bg-[#1877f2] text-white font-extrabold text-xs sm:text-sm transition flex items-center gap-2';
+                if (tabDash) tabDash.className = 'px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-[#f4ebd9] font-extrabold text-xs sm:text-sm transition flex items-center gap-2 border border-white/10';
+            }
+        }
+
+        function openAdminDashboardTab() {
+            requireAdminPin(() => {
+                switchStaffSubView('dashboard');
+            });
+        }
+
+        function clearCallHistoryLog() {
+            requireAdminPin(() => {
+                state.callHistory = [];
+                state.totalRecordedCount = 0;
+                state.completedCount = 0;
+                state.serviceCounts = {
+                    call_waiter: 0,
+                    request_bill: 0,
+                    request_menu: 0,
+                    clean_table: 0,
+                    custom_note: 0
+                };
+                saveDashboardState();
+                renderWaiterDashboard();
+                renderAdminDashboard();
+                showToast('تم تصفير سجل الإحصائيات والطلبات', 'amber');
+            });
+        }
+
+        function renderAdminDashboard() {
+            const totalEl = document.getElementById('dash-total-requests');
+            const activeEl = document.getElementById('dash-active-calls');
+            const visEl = document.getElementById('dash-visible-services');
+            const brandEl = document.getElementById('dash-brand-status');
+            const linkEl = document.getElementById('dash-brand-link-status');
+            const roomLabelEl = document.getElementById('dash-active-room-label');
+            const previewBtn = document.getElementById('dash-preview-customer-btn');
+
+            const activeCallsList = Object.values(state.activeCalls);
+            const cs = normalizeCustomerScreenState(state.customerScreen);
+            const visibleCount = cs.serviceOrder.filter(k => cs.services[k]?.visible !== false).length;
+
+            if (totalEl) totalEl.textContent = state.totalRecordedCount;
+            if (activeEl) activeEl.textContent = activeCallsList.length;
+            if (visEl) visEl.textContent = `${visibleCount} / ${cs.serviceOrder.length}`;
+            if (brandEl) brandEl.textContent = state.branding.name;
+            if (linkEl) linkEl.textContent = (state.branding.link || '').replace(/^https?:\/\//i, '');
+            if (roomLabelEl) roomLabelEl.textContent = state.roomId;
+            if (previewBtn) previewBtn.href = `${window.location.pathname}?table=1&room=${encodeURIComponent(state.roomId)}`;
+
+            const breakdownEl = document.getElementById('dash-service-breakdown');
+            if (breakdownEl) {
+                const maxVal = Math.max(1, ...Object.values(state.serviceCounts));
+                const keys = ['call_waiter', 'request_bill', 'request_menu', 'clean_table', 'custom_note'];
+                breakdownEl.innerHTML = keys.map(k => {
+                    const count = state.serviceCounts[k] || 0;
+                    const pct = Math.round((count / maxVal) * 100);
+                    const label = cs.services[k]?.title || REQUEST_TYPES[k]?.label || k;
+                    return `
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-bold text-slate-200">${escapeHTML(label)}</span>
+                                <span class="font-mono text-[#93c5fd] font-bold">${count}</span>
+                            </div>
+                            <div class="w-full h-2 rounded-full bg-[#121214] overflow-hidden">
+                                <div class="h-full bg-[#1877f2] rounded-full transition-all" style="width: ${pct}%"></div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            const summaryEl = document.getElementById('dash-customer-config-summary');
+            if (summaryEl) {
+                const orderedTitles = cs.serviceOrder
+                    .filter(k => cs.services[k]?.visible !== false)
+                    .map(k => cs.services[k]?.title);
+
+                summaryEl.innerHTML = `
+                    <div class="p-3 rounded-xl bg-[#121214] border border-white/10">
+                        <span class="text-slate-400">عنوان الخدمات:</span>
+                        <span class="font-bold text-white mr-1">${escapeHTML(cs.heading)}</span>
+                    </div>
+                    <div class="p-3 rounded-xl bg-[#121214] border border-white/10">
+                        <span class="text-slate-400">ترتيب الأيقونات الظاهرة:</span>
+                        <span class="font-bold text-[#f4ebd9] mr-1">${orderedTitles.length ? escapeHTML(orderedTitles.join(' ← ')) : 'لا توجد أيقونات ظاهرة'}</span>
+                    </div>
+                    <div class="p-3 rounded-xl bg-[#121214] border border-white/10 flex flex-wrap gap-2">
+                        <span class="px-2.5 py-1 rounded-lg ${cs.showShortcuts ? 'bg-emerald-500/15 text-emerald-300' : 'bg-white/5 text-slate-400'}">الطلبات السريعة: ${cs.showShortcuts ? 'مفعل' : 'مخفي'}</span>
+                        <span class="px-2.5 py-1 rounded-lg ${cs.showNoteBox ? 'bg-emerald-500/15 text-emerald-300' : 'bg-white/5 text-slate-400'}">حقل الملاحظة: ${cs.showNoteBox ? 'مفعل' : 'مخفي'}</span>
+                        <span class="px-2.5 py-1 rounded-lg ${cs.showFooter ? 'bg-emerald-500/15 text-emerald-300' : 'bg-white/5 text-slate-400'}">الفوتر: ${cs.showFooter ? 'مفعل' : 'مخفي'}</span>
+                    </div>
+                `;
+            }
+
+            const tbody = document.getElementById('dash-calls-history-tbody');
+            if (tbody) {
+                if (state.callHistory.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="py-6 text-center text-slate-400">لا توجد طلبات مسجلة في السجل بعد</td></tr>';
+                } else {
+                    tbody.innerHTML = state.callHistory.map(item => `
+                        <tr>
+                            <td class="py-2.5 px-3 font-black text-[#f4ebd9]">طاولة ${item.table}</td>
+                            <td class="py-2.5 px-3 font-bold text-white">${escapeHTML(cs.services[item.type]?.title || REQUEST_TYPES[item.type]?.label || item.type)}</td>
+                            <td class="py-2.5 px-3 text-slate-300">${item.note ? escapeHTML(item.note) : '-'}</td>
+                            <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded-full bg-white/10 text-[#93c5fd] font-bold">${escapeHTML(item.status)}</span></td>
+                            <td class="py-2.5 px-3 font-mono text-slate-400">${escapeHTML(item.timeStr)}</td>
+                        </tr>
+                    `).join('');
+                }
+            }
+        }
+
 
         function applyBrandingToUI() {
             const b = state.branding;
@@ -1288,6 +1621,7 @@
                 };
                 localStorage.setItem('plus90_branding', JSON.stringify(state.branding));
                 applyBrandingToUI();
+                if (state.role === 'staff') renderAdminDashboard();
                 closeBrandingModal();
                 showToast('تم حفظ اللوجو واللينك بنجاح', 'emerald');
             });
@@ -1298,6 +1632,7 @@
                 state.branding = { ...DEFAULT_BRANDING };
                 localStorage.setItem('plus90_branding', JSON.stringify(state.branding));
                 applyBrandingToUI();
+                if (state.role === 'staff') renderAdminDashboard();
                 closeBrandingModal();
                 showToast('تمت استعادة اللوجو واللينك الافتراضي', 'amber');
             });
@@ -1557,6 +1892,7 @@
                 });
                 localStorage.setItem('plus90_customer_screen', JSON.stringify(state.customerScreen));
                 applyCustomerScreenToUI();
+                if (state.role === 'staff') renderAdminDashboard();
                 closeCustomerScreenModal();
                 showToast('تم حفظ إعدادات شاشة العميل بنجاح', 'emerald');
             });
@@ -1567,6 +1903,7 @@
                 state.customerScreen = normalizeCustomerScreenState(DEFAULT_CUSTOMER_SCREEN);
                 localStorage.setItem('plus90_customer_screen', JSON.stringify(state.customerScreen));
                 applyCustomerScreenToUI();
+                if (state.role === 'staff') renderAdminDashboard();
                 closeCustomerScreenModal();
                 showToast('تمت استعادة إعدادات شاشة العميل الافتراضية', 'amber');
             });
@@ -1690,15 +2027,6 @@
             }
         } catch (e) {}
 
-        let mqttFailoverTimer = null;
-
-        function persistCallsState() {
-            try {
-                localStorage.setItem(`plus90_active_calls_${state.roomId}`, JSON.stringify(state.activeCalls));
-                localStorage.setItem(`plus90_completed_${state.roomId}`, String(state.completedCount || 0));
-            } catch (e) {}
-        }
-
         function updateMQTTStatusUI(status) {
             const staffDot = document.getElementById('staff-mqtt-dot');
             const staffText = document.getElementById('staff-mqtt-text');
@@ -1707,7 +2035,7 @@
 
             if (status === 'connected') {
                 if (staffDot) staffDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400';
-                if (staffText) staffText.textContent = 'متصل سحابي (4G / Wi-Fi)';
+                if (staffText) staffText.textContent = 'متصل MQTT';
                 if (custDot) custDot.className = 'w-2 h-2 rounded-full bg-emerald-500';
                 if (custText) custText.textContent = 'متصل مباشرة';
             } else if (status === 'connecting') {
@@ -1716,60 +2044,32 @@
                 if (custDot) custDot.className = 'w-2 h-2 rounded-full bg-amber-400 animate-pulse';
                 if (custText) custText.textContent = 'جاري الاتصال...';
             } else {
-                if (staffDot) staffDot.className = 'w-2.5 h-2.5 rounded-full bg-amber-500';
-                if (staffText) staffText.textContent = 'إعادة ربط السحابة...';
-                if (custDot) custDot.className = 'w-2 h-2 rounded-full bg-amber-500';
-                if (custText) custText.textContent = 'إعادة ربط...';
+                if (staffDot) staffDot.className = 'w-2.5 h-2.5 rounded-full bg-blue-400';
+                if (staffText) staffText.textContent = 'وضع المزامنة المحلية';
+                if (custDot) custDot.className = 'w-2 h-2 rounded-full bg-emerald-500';
+                if (custText) custText.textContent = 'جاهز للخدمة';
             }
-        }
-
-        function buildBrokerCandidates() {
-            const list = [
-                state.brokerUrl,
-                'wss://broker.emqx.io:8084/mqtt',
-                'wss://broker.hivemq.com:8884/mqtt',
-                'wss://test.mosquitto.org:8081/mqtt'
-            ];
-            return list.filter((u, idx) => typeof u === 'string' && u.trim().length > 0 && list.indexOf(u) === idx);
         }
 
         function initMQTT() {
-            clearTimeout(mqttFailoverTimer);
             updateMQTTStatusUI('connecting');
             if (mqttClient) {
                 try { mqttClient.end(true); } catch (e) {}
-                mqttClient = null;
             }
             if (typeof mqtt === 'undefined') {
                 updateMQTTStatusUI('offline');
-                mqttFailoverTimer = setTimeout(initMQTT, 4000);
                 return;
             }
-
-            const candidates = buildBrokerCandidates();
-            const targetUrl = candidates[state.activeBrokerIndex % candidates.length];
-
             try {
-                const clientId = 'plus90_' + Date.now().toString(36) + '_' + Math.random().toString(16).substr(2, 6);
-                mqttClient = mqtt.connect(targetUrl, {
+                const clientId = 'nidaa_' + Math.random().toString(16).substr(2, 8);
+                mqttClient = mqtt.connect(state.brokerUrl, {
                     clientId,
                     clean: true,
-                    keepalive: 25,
-                    connectTimeout: 6000,
-                    reconnectPeriod: 3000
+                    connectTimeout: 8000,
+                    reconnectPeriod: 4000
                 });
-
-                mqttFailoverTimer = setTimeout(() => {
-                    if (!state.mqttConnected && candidates.length > 1) {
-                        state.activeBrokerIndex = (state.activeBrokerIndex + 1) % candidates.length;
-                        initMQTT();
-                    }
-                }, 6500);
-
                 mqttClient.on('connect', () => {
-                    clearTimeout(mqttFailoverTimer);
                     state.mqttConnected = true;
-                    state.brokerUrl = targetUrl;
                     updateMQTTStatusUI('connected');
                     mqttClient.subscribe(`${state.baseTopic}/tables/#`, { qos: 1 });
                 });
@@ -1789,35 +2089,22 @@
             } catch (err) {
                 state.mqttConnected = false;
                 updateMQTTStatusUI('offline');
-                mqttFailoverTimer = setTimeout(initMQTT, 4000);
             }
         }
 
         function publishEvent(subTopic, payload) {
             const eventMsg = {
                 ...payload,
-                roomId: state.roomId,
                 eventId: payload.eventId || ('evt_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6))
             };
             handleIncomingEvent(eventMsg);
             if (localChannel) {
                 try { localChannel.postMessage(eventMsg); } catch (e) {}
             }
-            if (mqttClient && mqttClient.connected) {
+            if (mqttClient && state.mqttConnected) {
                 try {
-                    mqttClient.publish(`${state.baseTopic}/${subTopic}`, JSON.stringify(eventMsg), { qos: 1, retain: false });
+                    mqttClient.publish(`${state.baseTopic}/${subTopic}`, JSON.stringify(eventMsg), { qos: 1 });
                 } catch (e) {}
-            } else {
-                if (!mqttClient || !mqttClient.reconnecting) {
-                    initMQTT();
-                }
-                setTimeout(() => {
-                    if (mqttClient && mqttClient.connected) {
-                        try {
-                            mqttClient.publish(`${state.baseTopic}/${subTopic}`, JSON.stringify(eventMsg), { qos: 1, retain: false });
-                        } catch (e) {}
-                    }
-                }, 1200);
             }
         }
 
@@ -1834,15 +2121,29 @@
 
             if (data.action === 'NEW_CALL') {
                 const isNew = !state.activeCalls[data.table] || state.activeCalls[data.table].id !== data.id;
+                const callType = data.type || 'call_waiter';
                 state.activeCalls[data.table] = {
                     id: data.id,
                     table: Number(data.table),
-                    type: data.type || 'call_waiter',
+                    type: callType,
                     note: data.note || '',
                     timestamp: data.timestamp || Date.now(),
                     status: 'pending'
                 };
-                persistCallsState();
+                if (isNew) {
+                    state.totalRecordedCount++;
+                    state.serviceCounts[callType] = (state.serviceCounts[callType] || 0) + 1;
+                    state.callHistory.unshift({
+                        id: data.id,
+                        table: Number(data.table),
+                        type: callType,
+                        note: data.note || '',
+                        status: 'بانتظار النادل',
+                        timeStr: new Date(data.timestamp || Date.now()).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })
+                    });
+                    if (state.callHistory.length > 200) state.callHistory.pop();
+                }
+                saveDashboardState();
                 if (isNew && state.role === 'staff') {
                     playNotificationChime('new_call');
                     const reqLabel = REQUEST_TYPES[data.type]?.label || 'طلب خدمة';
@@ -1854,7 +2155,9 @@
             } else if (data.action === 'ACK_CALL') {
                 if (state.activeCalls[data.table]) {
                     state.activeCalls[data.table].status = 'acknowledged';
-                    persistCallsState();
+                    const histItem = state.callHistory.find(h => h.table === Number(data.table) && h.status === 'بانتظار النادل');
+                    if (histItem) histItem.status = 'جاري التنفيذ';
+                    saveDashboardState();
                     if (state.role === 'customer' && Number(data.table) === state.customerTable) {
                         playNotificationChime('ack');
                         showToast('النادل استلم طلبك وهو في الطريق إليك الآن!', 'emerald');
@@ -1865,7 +2168,9 @@
                 if (state.activeCalls[data.table]) {
                     delete state.activeCalls[data.table];
                     state.completedCount++;
-                    persistCallsState();
+                    const histItem = state.callHistory.find(h => h.table === Number(data.table) && h.status !== 'تم التنفيذ');
+                    if (histItem) histItem.status = 'تم التنفيذ';
+                    saveDashboardState();
                     if (state.role === 'customer' && Number(data.table) === state.customerTable) {
                         showToast('تم تنفيذ طلبك بنجاح، نتمنى لك وقتاً ممتعاً!', 'emerald');
                     }
@@ -1873,12 +2178,15 @@
             } else if (data.action === 'CANCEL_CALL') {
                 if (state.activeCalls[data.table]) {
                     delete state.activeCalls[data.table];
-                    persistCallsState();
+                    saveDashboardState();
                 }
             }
 
             if (state.role === 'staff') {
                 renderWaiterDashboard();
+                if (state.staffSubView === 'dashboard') {
+                    renderAdminDashboard();
+                }
             } else {
                 renderCustomerActiveStatus();
             }
@@ -2125,14 +2433,13 @@
                 previewLink.href = `${window.location.pathname}?table=1&room=${encodeURIComponent(state.roomId)}`;
             }
 
-            try {
-                const rawCalls = localStorage.getItem(`plus90_active_calls_${state.roomId}`);
-                state.activeCalls = rawCalls ? JSON.parse(rawCalls) : {};
-                state.completedCount = parseInt(localStorage.getItem(`plus90_completed_${state.roomId}`) || '0', 10) || 0;
-            } catch (e) {}
-            state.activeBrokerIndex = 0;
+            loadDashboardState();
             initMQTT();
             generateQRCards();
+            if (state.role === 'staff') {
+                renderWaiterDashboard();
+                if (state.staffSubView === 'dashboard') renderAdminDashboard();
+            }
             showToast(`تم التبديل إلى ${state.roomId}`, 'amber');
         }
 
@@ -2293,6 +2600,7 @@
         }, 1000);
 
         window.addEventListener('DOMContentLoaded', () => {
+            loadDashboardState();
             applyBrandingToUI();
             applyCustomerScreenToUI();
             updateAdminBadgeUI();
@@ -2300,28 +2608,6 @@
             initMQTT();
             if (state.role === 'staff' && 'Notification' in window && Notification.permission === 'default') {
                 Notification.requestPermission().catch(() => {});
-            }
-        });
-
-        window.addEventListener('online', () => {
-            state.activeBrokerIndex = 0;
-            initMQTT();
-            showToast('عاد الاتصال بالإنترنت — جاري مزامنة النداءات', 'emerald');
-        });
-
-        document.addEventListener('visibilitychange', () => {
-            if (!document.hidden && (!mqttClient || !mqttClient.connected)) {
-                initMQTT();
-            }
-            if (!document.hidden && state.role === 'staff') {
-                try {
-                    const rawCalls = localStorage.getItem(`plus90_active_calls_${state.roomId}`);
-                    if (rawCalls) {
-                        const savedCalls = JSON.parse(rawCalls);
-                        state.activeCalls = { ...savedCalls, ...state.activeCalls };
-                    }
-                } catch (e) {}
-                renderWaiterDashboard();
             }
         });
     </script>
