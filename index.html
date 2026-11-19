@@ -170,12 +170,12 @@
             <p id="noqr-brand-bio" class="text-xs sm:text-sm text-slate-300 leading-relaxed mb-4">
                 Plus 90 is your second home where you can gather with your friends, eat, watch TV, and play with 24 hour service.
             </p>
-            <p class="text-xs text-[#f4ebd9] bg-white/5 border border-white/10 rounded-2xl px-4 py-2.5 mb-5">
+            <p id="noqr-guide-text" class="text-xs text-[#f4ebd9] bg-white/5 border border-white/10 rounded-2xl px-4 py-2.5 mb-5">
                 يرجى مسح رمز QR الموجود على طاولتك أو غرفتك لبدء الاستدعاء الفوري للنادل.
             </p>
 
             <div class="w-full pt-4 border-t border-white/10">
-                <p class="text-xs font-bold text-slate-400 mb-3">تجربة محاكاة مسح QR لطاولة:</p>
+                <p id="noqr-sim-label" class="text-xs font-bold text-slate-400 mb-3">تجربة محاكاة مسح QR لطاولة:</p>
                 <div class="grid grid-cols-3 gap-2">
                     <button onclick="simulateScanTable(1)" class="py-2.5 px-3 rounded-xl bg-white/5 hover:bg-[#1877f2] text-white border border-white/10 font-extrabold text-xs transition">
                         <i class="fa-solid fa-qrcode ml-1"></i> طاولة 1
@@ -188,10 +188,34 @@
                     </button>
                 </div>
 
-                <a id="noqr-brand-link" href="https://linktr.ee/plusninetylounge" target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-2xl bg-[#1877f2]/15 hover:bg-[#1877f2]/25 border border-[#1877f2]/40 text-[#93c5fd] font-bold text-xs transition">
-                    <i class="fa-solid fa-link"></i>
-                    <span id="noqr-brand-link-text">linktr.ee/plusninetylounge</span>
-                </a>
+                <div class="mt-4 flex items-center gap-2">
+                    <a id="noqr-brand-link" href="https://linktr.ee/plusninetylounge" target="_blank" rel="noopener noreferrer" class="flex-1 inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-2xl bg-[#1877f2]/15 hover:bg-[#1877f2]/25 border border-[#1877f2]/40 text-[#93c5fd] font-bold text-xs transition">
+                        <i class="fa-solid fa-link"></i>
+                        <span id="noqr-brand-link-text">linktr.ee/plusninetylounge</span>
+                    </a>
+                    <div class="relative shrink-0">
+                        <button type="button" onclick="toggleSocialMenu('noqr-social-menu', event)" aria-label="حسابات السوشيال ميديا" class="h-full px-3.5 py-2.5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/15 text-[#f4ebd9] font-bold text-xs transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-share-nodes text-[#60a5fa]"></i>
+                            <i class="fa-brands fa-facebook-f text-[11px] text-[#60a5fa]"></i>
+                            <i class="fa-brands fa-instagram text-[11px] text-pink-400"></i>
+                            <i class="fa-brands fa-tiktok text-[11px] text-white"></i>
+                        </button>
+                        <div id="noqr-social-menu" class="hidden absolute bottom-full left-0 mb-2 w-48 bg-[#1b1b1f] border border-white/15 rounded-2xl p-2 shadow-2xl z-40 flex flex-col gap-1 text-right">
+                            <a id="social-fb-noqr" href="https://www.facebook.com/plus90eg" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-white/10 text-xs font-bold text-[#93c5fd] transition">
+                                <i class="fa-brands fa-facebook-f w-4 text-center text-[#1877f2]"></i>
+                                <span>فيسبوك (Facebook)</span>
+                            </a>
+                            <a id="social-ig-noqr" href="https://www.instagram.com/plus_ninety_lounge?igsh=MWJiYXkyZ2NiZWQxNg%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-white/10 text-xs font-bold text-pink-300 transition">
+                                <i class="fa-brands fa-instagram w-4 text-center text-pink-400"></i>
+                                <span>انستجرام (Instagram)</span>
+                            </a>
+                            <a id="social-tt-noqr" href="https://www.tiktok.com/@plusninetylounge" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-white/10 text-xs font-bold text-white transition">
+                                <i class="fa-brands fa-tiktok w-4 text-center text-white"></i>
+                                <span>تيك توك (TikTok)</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
 
                 <button onclick="openStaffLoginModal()" class="mt-3 text-xs font-bold text-slate-400 hover:text-[#f4ebd9] transition underline">
                     دخول النادل / لوحة التحكم (PIN: 1234)
@@ -208,13 +232,13 @@
                 <div class="flex items-center justify-between relative z-10">
                     <div>
                         <span class="inline-flex items-center gap-1.5 text-xs font-bold text-[#93c5fd] bg-[#1877f2]/15 border border-[#1877f2]/30 px-2.5 py-1 rounded-full mb-2">
-                            <i class="fa-solid fa-circle-check"></i> مؤكد عبر رمز QR • خدمة 24 ساعة
+                            <i class="fa-solid fa-circle-check"></i> <span id="locked-qr-badge-text">مؤكد عبر رمز QR • خدمة 24 ساعة</span>
                         </span>
                         <h2 class="text-2xl sm:text-3xl font-black tracking-tight">
-                            طاولة رقم <span id="locked-table-number" class="text-[#f4ebd9]">--</span>
+                            <span id="locked-table-prefix">طاولة رقم</span> <span id="locked-table-number" class="text-[#f4ebd9]">--</span>
                         </h2>
                     </div>
-                    <button onclick="cancelCustomerCall()" class="text-xs font-bold text-slate-300 hover:text-rose-400 px-2.5 py-1.5 rounded-xl hover:bg-rose-500/10 transition shrink-0">
+                    <button id="btn-cust-cancel-call" onclick="cancelCustomerCall()" class="text-xs font-bold text-slate-300 hover:text-rose-400 px-2.5 py-1.5 rounded-xl hover:bg-rose-500/10 transition shrink-0">
                         إلغاء
                     </button>
                 </div>
@@ -236,45 +260,45 @@
 
             <!-- Main 4 Service Action Buttons -->
             <div id="customer-service-buttons-section">
-                <h3 class="text-sm font-extrabold text-[#f4ebd9] mb-3 px-1">كيف يمكننا خدمتك الآن في Plus 90؟</h3>
-                <div class="grid grid-cols-2 gap-3.5">
-                    <button id="btn-cust-call-waiter" onclick="sendCustomerRequest('call_waiter')" class="group bg-[#1b1b1f] hover:bg-[#1877f2] active:scale-[0.98] p-5 rounded-3xl shadow-sm border border-white/10 hover:border-[#1877f2] transition-all flex flex-col items-center text-center gap-3">
+                <h3 id="customer-service-heading" class="text-sm font-extrabold text-[#f4ebd9] mb-3 px-1">كيف يمكننا خدمتك الآن في Plus 90؟</h3>
+                <div id="customer-service-grid" class="grid grid-cols-2 gap-3.5">
+                    <button id="btn-cust-call-waiter" data-service-key="call_waiter" onclick="sendCustomerRequest('call_waiter')" class="group bg-[#1b1b1f] hover:bg-[#1877f2] active:scale-[0.98] p-5 rounded-3xl shadow-sm border border-white/10 hover:border-[#1877f2] transition-all flex flex-col items-center text-center gap-3">
                         <div class="w-14 h-14 rounded-2xl bg-[#f4ebd9]/10 group-hover:bg-white/20 text-[#f4ebd9] group-hover:text-white flex items-center justify-center text-2xl transition">
                             <i class="fa-solid fa-bell-concierge"></i>
                         </div>
                         <div>
-                            <div class="font-black text-white text-base">استدعاء النادل</div>
-                            <div class="text-[11px] text-slate-400 group-hover:text-blue-100 font-semibold mt-0.5">حضور مباشر للطاولة</div>
+                            <div class="svc-title font-black text-white text-base">استدعاء النادل</div>
+                            <div class="svc-subtitle text-[11px] text-slate-400 group-hover:text-blue-100 font-semibold mt-0.5">حضور مباشر للطاولة</div>
                         </div>
                     </button>
 
-                    <button id="btn-cust-request-bill" onclick="sendCustomerRequest('request_bill')" class="group bg-[#1b1b1f] hover:bg-emerald-600 active:scale-[0.98] p-5 rounded-3xl shadow-sm border border-white/10 hover:border-emerald-600 transition-all flex flex-col items-center text-center gap-3">
+                    <button id="btn-cust-request-bill" data-service-key="request_bill" onclick="sendCustomerRequest('request_bill')" class="group bg-[#1b1b1f] hover:bg-emerald-600 active:scale-[0.98] p-5 rounded-3xl shadow-sm border border-white/10 hover:border-emerald-600 transition-all flex flex-col items-center text-center gap-3">
                         <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 group-hover:bg-white/20 text-emerald-400 group-hover:text-white flex items-center justify-center text-2xl transition">
                             <i class="fa-solid fa-file-invoice-dollar"></i>
                         </div>
                         <div>
-                            <div class="font-black text-white text-base">طلب الفاتورة</div>
-                            <div class="text-[11px] text-slate-400 group-hover:text-emerald-100 font-semibold mt-0.5">كاش أو شبكة / فيزا</div>
+                            <div class="svc-title font-black text-white text-base">طلب الفاتورة</div>
+                            <div class="svc-subtitle text-[11px] text-slate-400 group-hover:text-emerald-100 font-semibold mt-0.5">كاش أو شبكة / فيزا</div>
                         </div>
                     </button>
 
-                    <button id="btn-cust-request-menu" onclick="sendCustomerRequest('request_menu')" class="group bg-[#1b1b1f] hover:bg-amber-500 active:scale-[0.98] p-5 rounded-3xl shadow-sm border border-white/10 hover:border-amber-500 transition-all flex flex-col items-center text-center gap-3">
+                    <button id="btn-cust-request-menu" data-service-key="request_menu" onclick="sendCustomerRequest('request_menu')" class="group bg-[#1b1b1f] hover:bg-amber-500 active:scale-[0.98] p-5 rounded-3xl shadow-sm border border-white/10 hover:border-amber-500 transition-all flex flex-col items-center text-center gap-3">
                         <div class="w-14 h-14 rounded-2xl bg-amber-500/10 group-hover:bg-slate-950/20 text-amber-300 group-hover:text-slate-950 flex items-center justify-center text-2xl transition">
                             <i class="fa-solid fa-utensils"></i>
                         </div>
                         <div>
-                            <div class="font-black text-white group-hover:text-slate-950 text-base">إضافة طلبات</div>
-                            <div class="text-[11px] text-slate-400 group-hover:text-slate-900 font-semibold mt-0.5">أكل • مشروبات • سناكس</div>
+                            <div class="svc-title font-black text-white group-hover:text-slate-950 text-base">إضافة طلبات</div>
+                            <div class="svc-subtitle text-[11px] text-slate-400 group-hover:text-slate-900 font-semibold mt-0.5">أكل • مشروبات • سناكس</div>
                         </div>
                     </button>
 
-                    <button id="btn-cust-clean-table" onclick="sendCustomerRequest('clean_table')" class="group bg-[#1b1b1f] hover:bg-purple-600 active:scale-[0.98] p-5 rounded-3xl shadow-sm border border-white/10 hover:border-purple-600 transition-all flex flex-col items-center text-center gap-3">
+                    <button id="btn-cust-clean-table" data-service-key="clean_table" onclick="sendCustomerRequest('clean_table')" class="group bg-[#1b1b1f] hover:bg-purple-600 active:scale-[0.98] p-5 rounded-3xl shadow-sm border border-white/10 hover:border-purple-600 transition-all flex flex-col items-center text-center gap-3">
                         <div class="w-14 h-14 rounded-2xl bg-purple-500/10 group-hover:bg-white/20 text-purple-300 group-hover:text-white flex items-center justify-center text-2xl transition">
                             <i class="fa-solid fa-gamepad"></i>
                         </div>
                         <div>
-                            <div class="font-black text-white text-base">خدمة اللعب / الطاولة</div>
-                            <div class="text-[11px] text-slate-400 group-hover:text-purple-100 font-semibold mt-0.5">TV • PlayStation • ترتيب</div>
+                            <div class="svc-title font-black text-white text-base">خدمة اللعب / الطاولة</div>
+                            <div class="svc-subtitle text-[11px] text-slate-400 group-hover:text-purple-100 font-semibold mt-0.5">TV • PlayStation • ترتيب</div>
                         </div>
                     </button>
                 </div>
@@ -282,8 +306,8 @@
 
             <div id="customer-note-section" class="bg-[#1b1b1f] rounded-3xl p-5 shadow-sm border border-white/10">
                 <div id="customer-shortcuts-row">
-                    <label class="block text-xs font-extrabold text-[#f4ebd9] mb-2.5">طلبات سريعة بضغطة واحدة:</label>
-                    <div class="flex flex-wrap gap-2 mb-4">
+                    <label id="customer-shortcuts-label" class="block text-xs font-extrabold text-[#f4ebd9] mb-2.5">طلبات سريعة بضغطة واحدة:</label>
+                    <div id="customer-shortcuts-list" class="flex flex-wrap gap-2 mb-4">
                         <button onclick="sendQuickShortcut('ماء بارد')" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-[#1877f2] hover:text-white text-slate-200 border border-white/10 text-xs font-bold transition">
                             💧 ماء
                         </button>
@@ -301,19 +325,40 @@
 
                 <div id="customer-custom-note-box" class="flex gap-2">
                     <input id="customer-note-input" type="text" placeholder="أو اكتب ملاحظتك للنادل هنا..." class="flex-1 bg-[#121214] text-white border border-white/15 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-[#1877f2] transition">
-                    <button onclick="sendCustomNoteRequest()" class="px-5 py-3 rounded-2xl plus90-cream hover:brightness-95 font-extrabold text-sm transition shrink-0 flex items-center gap-2">
-                        <span>إرسال</span>
+                    <button id="btn-cust-send-note" onclick="sendCustomNoteRequest()" class="px-5 py-3 rounded-2xl plus90-cream hover:brightness-95 font-extrabold text-sm transition shrink-0 flex items-center gap-2">
+                        <span id="cust-send-btn-text">إرسال</span>
                         <i class="fa-solid fa-paper-plane text-xs"></i>
                     </button>
                 </div>
             </div>
 
-            <div id="customer-footer-box" class="text-center text-xs text-slate-400 pt-1">
+            <div id="customer-footer-box" class="text-center text-xs text-slate-400 pt-1 flex flex-wrap items-center justify-center gap-2 relative">
                 <a id="cust-footer-link" href="https://linktr.ee/plusninetylounge" target="_blank" rel="noopener noreferrer" class="hover:text-[#f4ebd9] transition underline">
                     linktr.ee/plusninetylounge
                 </a>
-                <span class="mx-1.5">•</span>
+                <span>•</span>
                 <span id="cust-footer-brand">Plus Ninety Lounge • 24H</span>
+                <div class="relative inline-block">
+                    <button type="button" onclick="toggleSocialMenu('footer-social-menu', event)" aria-label="فيسبوك وانستجرام وتيك توك" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-[#f4ebd9] text-[11px] font-bold transition">
+                        <i class="fa-brands fa-facebook-f text-[#60a5fa]"></i>
+                        <i class="fa-brands fa-instagram text-pink-400"></i>
+                        <i class="fa-brands fa-tiktok text-white"></i>
+                    </button>
+                    <div id="footer-social-menu" class="hidden absolute bottom-full left-0 mb-2 w-48 bg-[#1b1b1f] border border-white/15 rounded-2xl p-2 shadow-2xl z-40 flex flex-col gap-1 text-right">
+                        <a id="social-fb-footer" href="https://www.facebook.com/plus90eg" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-white/10 text-xs font-bold text-[#93c5fd] transition">
+                            <i class="fa-brands fa-facebook-f w-4 text-center text-[#1877f2]"></i>
+                            <span>فيسبوك (Facebook)</span>
+                        </a>
+                        <a id="social-ig-footer" href="https://www.instagram.com/plus_ninety_lounge?igsh=MWJiYXkyZ2NiZWQxNg%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-white/10 text-xs font-bold text-pink-300 transition">
+                            <i class="fa-brands fa-instagram w-4 text-center text-pink-400"></i>
+                            <span>انستجرام (Instagram)</span>
+                        </a>
+                        <a id="social-tt-footer" href="https://www.tiktok.com/@plusninetylounge" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-white/10 text-xs font-bold text-white transition">
+                            <i class="fa-brands fa-tiktok w-4 text-center text-white"></i>
+                            <span>تيك توك (TikTok)</span>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -489,8 +534,22 @@
                     </div>
                 </div>
                 <div>
-                    <label class="block font-bold text-slate-300 mb-1">اللينك (Link)</label>
+                    <label class="block font-bold text-slate-300 mb-1">اللينك الرئيسي (Link)</label>
                     <input id="brand-input-link" type="text" dir="ltr" class="w-full bg-[#121214] text-white border border-white/15 rounded-xl px-3.5 py-2.5 font-mono">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">لينك فيسبوك</label>
+                        <input id="brand-input-facebook" type="text" dir="ltr" class="w-full bg-[#121214] text-white border border-white/15 rounded-xl px-3 py-2 font-mono">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">لينك انستجرام</label>
+                        <input id="brand-input-instagram" type="text" dir="ltr" class="w-full bg-[#121214] text-white border border-white/15 rounded-xl px-3 py-2 font-mono">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">لينك تيك توك</label>
+                        <input id="brand-input-tiktok" type="text" dir="ltr" class="w-full bg-[#121214] text-white border border-white/15 rounded-xl px-3 py-2 font-mono">
+                    </div>
                 </div>
                 <div>
                     <label class="block font-bold text-slate-300 mb-1">العنوان الفرعي / 24 ساعة</label>
@@ -532,43 +591,67 @@
                 </button>
             </div>
 
-            <div class="space-y-3 text-xs">
-                <div>
-                    <label class="block font-bold text-slate-300 mb-1">عنوان قسم الخدمات في شاشة العميل</label>
-                    <input id="cs-heading-input" type="text" class="w-full bg-[#121214] text-white border border-white/15 rounded-xl px-3.5 py-2.5">
-                </div>
-                <div>
-                    <label class="block font-bold text-slate-300 mb-1">نص حقل الملاحظات</label>
-                    <input id="cs-placeholder-input" type="text" class="w-full bg-[#121214] text-white border border-white/15 rounded-xl px-3.5 py-2.5">
+            <div class="space-y-3.5 text-xs">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">عنوان قسم الخدمات</label>
+                        <input id="cs-heading-input" type="text" class="w-full bg-[#121214] text-white border border-white/15 rounded-xl px-3 py-2">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">كلمة الطاولة</label>
+                        <input id="cs-table-prefix-input" type="text" class="w-full bg-[#121214] text-white border border-white/15 rounded-xl px-3 py-2">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">شارة تأكيد الـ QR</label>
+                        <input id="cs-qr-badge-input" type="text" class="w-full bg-[#121214] text-white border border-white/15 rounded-xl px-3 py-2">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">زر الإلغاء</label>
+                        <input id="cs-cancel-text-input" type="text" class="w-full bg-[#121214] text-white border border-white/15 rounded-xl px-3 py-2">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">عنوان الطلبات السريعة</label>
+                        <input id="cs-shortcuts-label-input" type="text" class="w-full bg-[#121214] text-white border border-white/15 rounded-xl px-3 py-2">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">نص زر الإرسال</label>
+                        <input id="cs-send-text-input" type="text" class="w-full bg-[#121214] text-white border border-white/15 rounded-xl px-3 py-2">
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="block font-bold text-slate-300 mb-1">نص حقل الملاحظات</label>
+                        <input id="cs-placeholder-input" type="text" class="w-full bg-[#121214] text-white border border-white/15 rounded-xl px-3 py-2">
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="block font-bold text-slate-300 mb-1">رسالة شاشة عدم مسح QR</label>
+                        <input id="cs-noqr-msg-input" type="text" class="w-full bg-[#121214] text-white border border-white/15 rounded-xl px-3 py-2">
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="block font-bold text-slate-300 mb-1">نص محاكاة الطاولات</label>
+                        <input id="cs-noqr-sim-input" type="text" class="w-full bg-[#121214] text-white border border-white/15 rounded-xl px-3 py-2">
+                    </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
-                    <label class="flex items-center justify-between bg-[#121214] border border-white/10 rounded-xl px-3.5 py-2.5 cursor-pointer">
-                        <span class="font-bold text-slate-200">زر استدعاء النادل</span>
-                        <input id="cs-show-call-waiter" type="checkbox" class="w-4 h-4 accent-[#1877f2]">
-                    </label>
-                    <label class="flex items-center justify-between bg-[#121214] border border-white/10 rounded-xl px-3.5 py-2.5 cursor-pointer">
-                        <span class="font-bold text-slate-200">زر طلب الفاتورة</span>
-                        <input id="cs-show-request-bill" type="checkbox" class="w-4 h-4 accent-[#1877f2]">
-                    </label>
-                    <label class="flex items-center justify-between bg-[#121214] border border-white/10 rounded-xl px-3.5 py-2.5 cursor-pointer">
-                        <span class="font-bold text-slate-200">زر إضافة طلبات</span>
-                        <input id="cs-show-request-menu" type="checkbox" class="w-4 h-4 accent-[#1877f2]">
-                    </label>
-                    <label class="flex items-center justify-between bg-[#121214] border border-white/10 rounded-xl px-3.5 py-2.5 cursor-pointer">
-                        <span class="font-bold text-slate-200">زر خدمة اللعب / الطاولة</span>
-                        <input id="cs-show-clean-table" type="checkbox" class="w-4 h-4 accent-[#1877f2]">
-                    </label>
-                    <label class="flex items-center justify-between bg-[#121214] border border-white/10 rounded-xl px-3.5 py-2.5 cursor-pointer">
+                <div class="pt-1">
+                    <label class="block font-bold text-[#93c5fd] mb-2">ترتيب وتعديل أيقونات الخدمات (تحريك لأعلى / لأسفل + نص كل زر)</label>
+                    <div id="cs-services-order-list" class="space-y-2"></div>
+                </div>
+
+                <div class="pt-1">
+                    <label class="block font-bold text-[#93c5fd] mb-2">تعديل أزرار الطلبات السريعة</label>
+                    <div id="cs-shortcuts-editor-list" class="space-y-2"></div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
+                    <label class="flex items-center justify-between bg-[#121214] border border-white/10 rounded-xl px-3 py-2 cursor-pointer">
                         <span class="font-bold text-slate-200">الطلبات السريعة</span>
                         <input id="cs-show-shortcuts" type="checkbox" class="w-4 h-4 accent-[#1877f2]">
                     </label>
-                    <label class="flex items-center justify-between bg-[#121214] border border-white/10 rounded-xl px-3.5 py-2.5 cursor-pointer">
+                    <label class="flex items-center justify-between bg-[#121214] border border-white/10 rounded-xl px-3 py-2 cursor-pointer">
                         <span class="font-bold text-slate-200">حقل الملاحظة</span>
                         <input id="cs-show-note-box" type="checkbox" class="w-4 h-4 accent-[#1877f2]">
                     </label>
-                    <label class="flex items-center justify-between bg-[#121214] border border-white/10 rounded-xl px-3.5 py-2.5 cursor-pointer sm:col-span-2">
-                        <span class="font-bold text-slate-200">إظهار رابط الفوتر في شاشة العميل</span>
+                    <label class="flex items-center justify-between bg-[#121214] border border-white/10 rounded-xl px-3 py-2 cursor-pointer">
+                        <span class="font-bold text-slate-200">رابط الفوتر</span>
                         <input id="cs-show-footer" type="checkbox" class="w-4 h-4 accent-[#1877f2]">
                     </label>
                 </div>
@@ -895,6 +978,9 @@
             logoText: '90+',
             logoUrl: '',
             link: 'https://linktr.ee/plusninetylounge',
+            facebookUrl: 'https://www.facebook.com/plus90eg',
+            instagramUrl: 'https://www.instagram.com/plus_ninety_lounge?igsh=MWJiYXkyZ2NiZWQxNg%3D%3D&utm_source=qr',
+            tiktokUrl: 'https://www.tiktok.com/@plusninetylounge',
             tagline: 'Your second home • 24 Hour Service',
             bio: 'Plus 90 is your second home where you can gather with your friends, eat, watch TV, and play with 24 hour service.',
             desc: 'تجمع • أكل • TV • PlayStation • خدمة 24 ساعة'
@@ -902,11 +988,27 @@
 
         const DEFAULT_CUSTOMER_SCREEN = {
             heading: 'كيف يمكننا خدمتك الآن في Plus 90؟',
+            noQrMessage: 'يرجى مسح رمز QR الموجود على طاولتك أو غرفتك لبدء الاستدعاء الفوري للنادل.',
+            noQrSimLabel: 'تجربة محاكاة مسح QR لطاولة:',
+            tablePrefix: 'طاولة رقم',
+            qrBadgeText: 'مؤكد عبر رمز QR • خدمة 24 ساعة',
+            cancelButtonText: 'إلغاء',
+            shortcutsLabel: 'طلبات سريعة بضغطة واحدة:',
+            sendButtonText: 'إرسال',
             notePlaceholder: 'أو اكتب ملاحظتك للنادل هنا...',
-            showCallWaiter: true,
-            showRequestBill: true,
-            showRequestMenu: true,
-            showCleanTable: true,
+            serviceOrder: ['call_waiter', 'request_bill', 'request_menu', 'clean_table'],
+            services: {
+                call_waiter: { title: 'استدعاء النادل', subtitle: 'حضور مباشر للطاولة', visible: true },
+                request_bill: { title: 'طلب الفاتورة', subtitle: 'كاش أو شبكة / فيزا', visible: true },
+                request_menu: { title: 'إضافة طلبات', subtitle: 'أكل • مشروبات • سناكس', visible: true },
+                clean_table: { title: 'خدمة اللعب / الطاولة', subtitle: 'TV • PlayStation • ترتيب', visible: true }
+            },
+            shortcuts: [
+                { emoji: '💧', label: 'ماء', note: 'ماء بارد' },
+                { emoji: '🧻', label: 'مناديل', note: 'مناديل إضافية' },
+                { emoji: '🎮', label: 'ذراع تحكم', note: 'ذراع تحكم PlayStation إضافي' },
+                { emoji: '📺', label: 'إعداد TV', note: 'تغيير قناة / إعداد TV' }
+            ],
             showShortcuts: true,
             showNoteBox: true,
             showFooter: true
@@ -1098,7 +1200,44 @@
                 footerLink.textContent = displayLink;
             }
             if (footerBrand) footerBrand.textContent = `${b.name} • 24H`;
+
+            const fbUrl = (b.facebookUrl || '').trim() || DEFAULT_BRANDING.facebookUrl;
+            const igUrl = (b.instagramUrl || '').trim() || DEFAULT_BRANDING.instagramUrl;
+            const ttUrl = (b.tiktokUrl || '').trim() || DEFAULT_BRANDING.tiktokUrl;
+
+            ['social-fb-noqr', 'social-fb-footer'].forEach((id) => {
+                const el = document.getElementById(id);
+                if (el) el.href = fbUrl;
+            });
+            ['social-ig-noqr', 'social-ig-footer'].forEach((id) => {
+                const el = document.getElementById(id);
+                if (el) el.href = igUrl;
+            });
+            ['social-tt-noqr', 'social-tt-footer'].forEach((id) => {
+                const el = document.getElementById(id);
+                if (el) el.href = ttUrl;
+            });
         }
+
+        function toggleSocialMenu(menuId, event) {
+            if (event) event.stopPropagation();
+            const targetMenu = document.getElementById(menuId);
+            const allMenus = ['noqr-social-menu', 'footer-social-menu'];
+            allMenus.forEach((id) => {
+                if (id !== menuId) {
+                    const m = document.getElementById(id);
+                    if (m) m.classList.add('hidden');
+                }
+            });
+            if (targetMenu) targetMenu.classList.toggle('hidden');
+        }
+
+        document.addEventListener('click', () => {
+            ['noqr-social-menu', 'footer-social-menu'].forEach((id) => {
+                const m = document.getElementById(id);
+                if (m) m.classList.add('hidden');
+            });
+        });
 
         function openBrandingModal() {
             requireAdminPin(() => {
@@ -1106,6 +1245,9 @@
                 document.getElementById('brand-input-logo-text').value = state.branding.logoText;
                 document.getElementById('brand-input-logo-url').value = state.branding.logoUrl;
                 document.getElementById('brand-input-link').value = state.branding.link;
+                document.getElementById('brand-input-facebook').value = state.branding.facebookUrl || DEFAULT_BRANDING.facebookUrl;
+                document.getElementById('brand-input-instagram').value = state.branding.instagramUrl || DEFAULT_BRANDING.instagramUrl;
+                document.getElementById('brand-input-tiktok').value = state.branding.tiktokUrl || DEFAULT_BRANDING.tiktokUrl;
                 document.getElementById('brand-input-tagline').value = state.branding.tagline;
                 document.getElementById('brand-input-bio').value = state.branding.bio;
                 document.getElementById('brand-input-desc').value = state.branding.desc;
@@ -1124,6 +1266,9 @@
                     logoText: document.getElementById('brand-input-logo-text').value.trim() || DEFAULT_BRANDING.logoText,
                     logoUrl: document.getElementById('brand-input-logo-url').value.trim(),
                     link: document.getElementById('brand-input-link').value.trim() || DEFAULT_BRANDING.link,
+                    facebookUrl: document.getElementById('brand-input-facebook').value.trim() || DEFAULT_BRANDING.facebookUrl,
+                    instagramUrl: document.getElementById('brand-input-instagram').value.trim() || DEFAULT_BRANDING.instagramUrl,
+                    tiktokUrl: document.getElementById('brand-input-tiktok').value.trim() || DEFAULT_BRANDING.tiktokUrl,
                     tagline: document.getElementById('brand-input-tagline').value.trim() || DEFAULT_BRANDING.tagline,
                     bio: document.getElementById('brand-input-bio').value.trim() || DEFAULT_BRANDING.bio,
                     desc: document.getElementById('brand-input-desc').value.trim() || DEFAULT_BRANDING.desc
@@ -1145,19 +1290,117 @@
             });
         }
 
+        let draftCustomerScreen = null;
+
+        function normalizeCustomerScreenState(raw) {
+            const src = raw || {};
+            const baseOrder = ['call_waiter', 'request_bill', 'request_menu', 'clean_table'];
+            const savedOrder = Array.isArray(src.serviceOrder) ? src.serviceOrder : [];
+            const mergedOrder = [
+                ...savedOrder.filter((k) => baseOrder.includes(k)),
+                ...baseOrder.filter((k) => !savedOrder.includes(k))
+            ];
+
+            const mergedServices = {};
+            baseOrder.forEach((key) => {
+                const defSvc = DEFAULT_CUSTOMER_SCREEN.services[key];
+                const rawSvc = (src.services && src.services[key]) || {};
+                const legacyVisibleMap = {
+                    call_waiter: src.showCallWaiter,
+                    request_bill: src.showRequestBill,
+                    request_menu: src.showRequestMenu,
+                    clean_table: src.showCleanTable
+                };
+                const vis = typeof rawSvc.visible === 'boolean'
+                    ? rawSvc.visible
+                    : (typeof legacyVisibleMap[key] === 'boolean' ? legacyVisibleMap[key] : defSvc.visible);
+
+                mergedServices[key] = {
+                    title: (rawSvc.title || '').trim() || defSvc.title,
+                    subtitle: (rawSvc.subtitle || '').trim() || defSvc.subtitle,
+                    visible: vis
+                };
+            });
+
+            const rawShortcuts = Array.isArray(src.shortcuts) && src.shortcuts.length > 0
+                ? src.shortcuts
+                : DEFAULT_CUSTOMER_SCREEN.shortcuts;
+
+            return {
+                heading: (src.heading || '').trim() || DEFAULT_CUSTOMER_SCREEN.heading,
+                noQrMessage: (src.noQrMessage || '').trim() || DEFAULT_CUSTOMER_SCREEN.noQrMessage,
+                noQrSimLabel: (src.noQrSimLabel || '').trim() || DEFAULT_CUSTOMER_SCREEN.noQrSimLabel,
+                tablePrefix: (src.tablePrefix || '').trim() || DEFAULT_CUSTOMER_SCREEN.tablePrefix,
+                qrBadgeText: (src.qrBadgeText || '').trim() || DEFAULT_CUSTOMER_SCREEN.qrBadgeText,
+                cancelButtonText: (src.cancelButtonText || '').trim() || DEFAULT_CUSTOMER_SCREEN.cancelButtonText,
+                shortcutsLabel: (src.shortcutsLabel || '').trim() || DEFAULT_CUSTOMER_SCREEN.shortcutsLabel,
+                sendButtonText: (src.sendButtonText || '').trim() || DEFAULT_CUSTOMER_SCREEN.sendButtonText,
+                notePlaceholder: (src.notePlaceholder || '').trim() || DEFAULT_CUSTOMER_SCREEN.notePlaceholder,
+                serviceOrder: mergedOrder,
+                services: mergedServices,
+                shortcuts: rawShortcuts.map((sc, idx) => {
+                    const defSc = DEFAULT_CUSTOMER_SCREEN.shortcuts[idx] || { emoji: '✨', label: 'طلب سريع', note: 'طلب سريع' };
+                    return {
+                        emoji: (sc.emoji || '').trim() || defSc.emoji,
+                        label: (sc.label || '').trim() || defSc.label,
+                        note: (sc.note || '').trim() || (sc.label || '').trim() || defSc.note
+                    };
+                }),
+                showShortcuts: src.showShortcuts !== false,
+                showNoteBox: src.showNoteBox !== false,
+                showFooter: src.showFooter !== false
+            };
+        }
+
+        state.customerScreen = normalizeCustomerScreenState(state.customerScreen);
+
         function applyCustomerScreenToUI() {
-            const cs = state.customerScreen;
-            const headingEl = document.querySelector('#customer-service-buttons-section h3');
-            if (headingEl) headingEl.textContent = cs.heading || DEFAULT_CUSTOMER_SCREEN.heading;
+            const cs = normalizeCustomerScreenState(state.customerScreen);
+            state.customerScreen = cs;
+
+            const setText = (id, val) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = val;
+            };
+
+            setText('customer-service-heading', cs.heading);
+            setText('noqr-guide-text', cs.noQrMessage);
+            setText('noqr-sim-label', cs.noQrSimLabel);
+            setText('locked-table-prefix', cs.tablePrefix);
+            setText('locked-qr-badge-text', cs.qrBadgeText);
+            setText('btn-cust-cancel-call', cs.cancelButtonText);
+            setText('customer-shortcuts-label', cs.shortcutsLabel);
+            setText('cust-send-btn-text', cs.sendButtonText);
 
             const noteInput = document.getElementById('customer-note-input');
-            if (noteInput) noteInput.placeholder = cs.notePlaceholder || DEFAULT_CUSTOMER_SCREEN.notePlaceholder;
+            if (noteInput) noteInput.placeholder = cs.notePlaceholder;
+
+            const grid = document.getElementById('customer-service-grid');
+            if (grid) {
+                cs.serviceOrder.forEach((key) => {
+                    const btn = grid.querySelector(`[data-service-key="${key}"]`);
+                    if (!btn) return;
+                    const svc = cs.services[key];
+                    const titleEl = btn.querySelector('.svc-title');
+                    const subEl = btn.querySelector('.svc-subtitle');
+                    if (titleEl) titleEl.textContent = svc.title;
+                    if (subEl) subEl.textContent = svc.subtitle;
+                    if (svc.visible === false) btn.classList.add('hidden');
+                    else btn.classList.remove('hidden');
+                    grid.appendChild(btn);
+                });
+            }
+
+            const shortcutsList = document.getElementById('customer-shortcuts-list');
+            if (shortcutsList) {
+                shortcutsList.innerHTML = cs.shortcuts.map((sc) => `
+                    <button type="button" onclick="sendQuickShortcut('${escapeHTML(sc.note)}')" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-[#1877f2] hover:text-white text-slate-200 border border-white/10 text-xs font-bold transition">
+                        ${escapeHTML(sc.emoji)} ${escapeHTML(sc.label)}
+                    </button>
+                `).join('');
+            }
 
             const toggleMap = [
-                ['btn-cust-call-waiter', cs.showCallWaiter],
-                ['btn-cust-request-bill', cs.showRequestBill],
-                ['btn-cust-request-menu', cs.showRequestMenu],
-                ['btn-cust-clean-table', cs.showCleanTable],
                 ['customer-shortcuts-row', cs.showShortcuts],
                 ['customer-custom-note-box', cs.showNoteBox],
                 ['customer-footer-box', cs.showFooter]
@@ -1180,39 +1423,125 @@
             }
         }
 
+        function renderCustomerScreenDraftEditors() {
+            if (!draftCustomerScreen) return;
+
+            const orderContainer = document.getElementById('cs-services-order-list');
+            if (orderContainer) {
+                orderContainer.innerHTML = draftCustomerScreen.serviceOrder.map((key, idx) => {
+                    const svc = draftCustomerScreen.services[key];
+                    return `
+                        <div class="bg-[#121214] border border-white/10 rounded-xl p-2.5 flex flex-col sm:flex-row sm:items-center gap-2">
+                            <div class="flex items-center gap-1 shrink-0">
+                                <button type="button" onclick="moveServiceIcon(${idx}, -1)" ${idx === 0 ? 'disabled' : ''} class="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/15 disabled:opacity-30 text-white flex items-center justify-center">
+                                    <i class="fa-solid fa-arrow-up"></i>
+                                </button>
+                                <button type="button" onclick="moveServiceIcon(${idx}, 1)" ${idx === draftCustomerScreen.serviceOrder.length - 1 ? 'disabled' : ''} class="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/15 disabled:opacity-30 text-white flex items-center justify-center">
+                                    <i class="fa-solid fa-arrow-down"></i>
+                                </button>
+                                <label class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-white/5 cursor-pointer text-[11px] text-slate-300">
+                                    <input type="checkbox" onchange="toggleDraftServiceVisible('${key}', this.checked)" ${svc.visible !== false ? 'checked' : ''} class="accent-[#1877f2]">
+                                    <span>ظاهر</span>
+                                </label>
+                            </div>
+                            <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                                <input type="text" value="${escapeHTML(svc.title)}" oninput="updateDraftServiceField('${key}', 'title', this.value)" placeholder="اسم الزر" class="bg-[#1b1b1f] text-white border border-white/10 rounded-lg px-2.5 py-1.5">
+                                <input type="text" value="${escapeHTML(svc.subtitle)}" oninput="updateDraftServiceField('${key}', 'subtitle', this.value)" placeholder="الوصف الفرعي" class="bg-[#1b1b1f] text-white border border-white/10 rounded-lg px-2.5 py-1.5">
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            const shortcutsContainer = document.getElementById('cs-shortcuts-editor-list');
+            if (shortcutsContainer) {
+                shortcutsContainer.innerHTML = draftCustomerScreen.shortcuts.map((sc, idx) => `
+                    <div class="bg-[#121214] border border-white/10 rounded-xl p-2 grid grid-cols-12 gap-1.5 items-center">
+                        <input type="text" value="${escapeHTML(sc.emoji)}" oninput="updateDraftShortcutField(${idx}, 'emoji', this.value)" class="col-span-2 bg-[#1b1b1f] text-white border border-white/10 rounded-lg px-2 py-1.5 text-center">
+                        <input type="text" value="${escapeHTML(sc.label)}" oninput="updateDraftShortcutField(${idx}, 'label', this.value)" placeholder="الاسم" class="col-span-4 bg-[#1b1b1f] text-white border border-white/10 rounded-lg px-2.5 py-1.5">
+                        <input type="text" value="${escapeHTML(sc.note)}" oninput="updateDraftShortcutField(${idx}, 'note', this.value)" placeholder="نص الطلب للنادل" class="col-span-6 bg-[#1b1b1f] text-white border border-white/10 rounded-lg px-2.5 py-1.5">
+                    </div>
+                `).join('');
+            }
+        }
+
+        function syncDraftTextsFromInputs() {
+            if (!draftCustomerScreen) return;
+            draftCustomerScreen.heading = document.getElementById('cs-heading-input').value;
+            draftCustomerScreen.tablePrefix = document.getElementById('cs-table-prefix-input').value;
+            draftCustomerScreen.qrBadgeText = document.getElementById('cs-qr-badge-input').value;
+            draftCustomerScreen.cancelButtonText = document.getElementById('cs-cancel-text-input').value;
+            draftCustomerScreen.shortcutsLabel = document.getElementById('cs-shortcuts-label-input').value;
+            draftCustomerScreen.sendButtonText = document.getElementById('cs-send-text-input').value;
+            draftCustomerScreen.notePlaceholder = document.getElementById('cs-placeholder-input').value;
+            draftCustomerScreen.noQrMessage = document.getElementById('cs-noqr-msg-input').value;
+            draftCustomerScreen.noQrSimLabel = document.getElementById('cs-noqr-sim-input').value;
+        }
+
+        function moveServiceIcon(index, delta) {
+            if (!draftCustomerScreen) return;
+            syncDraftTextsFromInputs();
+            const targetIdx = index + delta;
+            if (targetIdx < 0 || targetIdx >= draftCustomerScreen.serviceOrder.length) return;
+            const arr = draftCustomerScreen.serviceOrder;
+            [arr[index], arr[targetIdx]] = [arr[targetIdx], arr[index]];
+            renderCustomerScreenDraftEditors();
+        }
+
+        function toggleDraftServiceVisible(key, checked) {
+            if (!draftCustomerScreen || !draftCustomerScreen.services[key]) return;
+            draftCustomerScreen.services[key].visible = checked;
+        }
+
+        function updateDraftServiceField(key, field, value) {
+            if (!draftCustomerScreen || !draftCustomerScreen.services[key]) return;
+            draftCustomerScreen.services[key][field] = value;
+        }
+
+        function updateDraftShortcutField(idx, field, value) {
+            if (!draftCustomerScreen || !draftCustomerScreen.shortcuts[idx]) return;
+            draftCustomerScreen.shortcuts[idx][field] = value;
+        }
+
         function openCustomerScreenModal() {
             requireAdminPin(() => {
-                const cs = state.customerScreen;
+                const cs = normalizeCustomerScreenState(state.customerScreen);
+                draftCustomerScreen = JSON.parse(JSON.stringify(cs));
+
                 document.getElementById('cs-heading-input').value = cs.heading;
+                document.getElementById('cs-table-prefix-input').value = cs.tablePrefix;
+                document.getElementById('cs-qr-badge-input').value = cs.qrBadgeText;
+                document.getElementById('cs-cancel-text-input').value = cs.cancelButtonText;
+                document.getElementById('cs-shortcuts-label-input').value = cs.shortcutsLabel;
+                document.getElementById('cs-send-text-input').value = cs.sendButtonText;
                 document.getElementById('cs-placeholder-input').value = cs.notePlaceholder;
-                document.getElementById('cs-show-call-waiter').checked = cs.showCallWaiter !== false;
-                document.getElementById('cs-show-request-bill').checked = cs.showRequestBill !== false;
-                document.getElementById('cs-show-request-menu').checked = cs.showRequestMenu !== false;
-                document.getElementById('cs-show-clean-table').checked = cs.showCleanTable !== false;
+                document.getElementById('cs-noqr-msg-input').value = cs.noQrMessage;
+                document.getElementById('cs-noqr-sim-input').value = cs.noQrSimLabel;
+
                 document.getElementById('cs-show-shortcuts').checked = cs.showShortcuts !== false;
                 document.getElementById('cs-show-note-box').checked = cs.showNoteBox !== false;
                 document.getElementById('cs-show-footer').checked = cs.showFooter !== false;
+
+                renderCustomerScreenDraftEditors();
                 document.getElementById('customer-screen-modal').classList.remove('hidden');
             });
         }
 
         function closeCustomerScreenModal() {
+            draftCustomerScreen = null;
             document.getElementById('customer-screen-modal').classList.add('hidden');
         }
 
         function saveCustomerScreenSettings() {
             requireAdminPin(() => {
-                state.customerScreen = {
-                    heading: document.getElementById('cs-heading-input').value.trim() || DEFAULT_CUSTOMER_SCREEN.heading,
-                    notePlaceholder: document.getElementById('cs-placeholder-input').value.trim() || DEFAULT_CUSTOMER_SCREEN.notePlaceholder,
-                    showCallWaiter: document.getElementById('cs-show-call-waiter').checked,
-                    showRequestBill: document.getElementById('cs-show-request-bill').checked,
-                    showRequestMenu: document.getElementById('cs-show-request-menu').checked,
-                    showCleanTable: document.getElementById('cs-show-clean-table').checked,
+                syncDraftTextsFromInputs();
+                const base = draftCustomerScreen || state.customerScreen;
+                state.customerScreen = normalizeCustomerScreenState({
+                    ...base,
                     showShortcuts: document.getElementById('cs-show-shortcuts').checked,
                     showNoteBox: document.getElementById('cs-show-note-box').checked,
                     showFooter: document.getElementById('cs-show-footer').checked
-                };
+                });
                 localStorage.setItem('plus90_customer_screen', JSON.stringify(state.customerScreen));
                 applyCustomerScreenToUI();
                 closeCustomerScreenModal();
@@ -1222,7 +1551,7 @@
 
         function resetCustomerScreenSettings() {
             requireAdminPin(() => {
-                state.customerScreen = { ...DEFAULT_CUSTOMER_SCREEN };
+                state.customerScreen = normalizeCustomerScreenState(DEFAULT_CUSTOMER_SCREEN);
                 localStorage.setItem('plus90_customer_screen', JSON.stringify(state.customerScreen));
                 applyCustomerScreenToUI();
                 closeCustomerScreenModal();
