@@ -1452,7 +1452,11 @@
                 };
                 if (isNew && state.role === 'staff') {
                     playNotificationChime('new_call');
-                    showToast(`نداء جديد من طاولة ${data.table}: ${REQUEST_TYPES[data.type]?.label || 'طلب خدمة'}`, 'amber');
+                    const reqLabel = REQUEST_TYPES[data.type]?.label || 'طلب خدمة';
+                    const toastMsg = `نداء جديد من طاولة ${data.table}: ${reqLabel}`;
+                    showToast(toastMsg, 'amber');
+                    const bodyText = data.note ? `${reqLabel} — ${data.note}` : `${reqLabel} • ${state.roomId}`;
+                    triggerMobileScreenNotification(`طاولة ${data.table} • ${state.branding?.name || 'Plus Ninety Lounge'}`, bodyText, `call-${data.table}`);
                 }
             } else if (data.action === 'ACK_CALL') {
                 if (state.activeCalls[data.table]) {
@@ -1460,6 +1464,7 @@
                     if (state.role === 'customer' && Number(data.table) === state.customerTable) {
                         playNotificationChime('ack');
                         showToast('النادل استلم طلبك وهو في الطريق إليك الآن!', 'emerald');
+                        triggerMobileScreenNotification(state.branding?.name || 'Plus Ninety Lounge', 'النادل استلم طلبك وهو في الطريق إليك الآن!', `ack-${data.table}`);
                     }
                 }
             } else if (data.action === 'COMPLETE_CALL') {
@@ -1820,6 +1825,43 @@
             }[m]));
         }
 
+        function requestMobileNotificationPermission() {
+            try {
+                if ('Notification' in window && Notification.permission === 'default') {
+                    Notification.requestPermission().catch(() => {});
+                }
+            } catch (e) {}
+        }
+
+        function triggerMobileScreenNotification(title, body, tag = 'plus90-call') {
+            try {
+                if (!('Notification' in window)) return;
+                if (Notification.permission !== 'granted') return;
+
+                const iconUrl = buildAppIconCanvasDataUrl(state.branding?.logoText || '90+', 192);
+                const options = {
+                    body: body,
+                    icon: iconUrl,
+                    badge: iconUrl,
+                    tag: tag,
+                    renotify: true,
+                    requireInteraction: false,
+                    dir: 'rtl',
+                    lang: 'ar'
+                };
+
+                if (swRegistration && typeof swRegistration.showNotification === 'function') {
+                    swRegistration.showNotification(title, options).catch(() => {
+                        try { new Notification(title, options); } catch (err) {}
+                    });
+                } else {
+                    new Notification(title, options);
+                }
+            } catch (e) {}
+        }
+
+        document.addEventListener('pointerdown', requestMobileNotificationPermission, { once: true });
+
         function showToast(message, color = 'slate') {
             const container = document.getElementById('toast-container');
             if (!container) return;
@@ -1854,6 +1896,9 @@
             updateAdminBadgeUI();
             applyRoleView(state.role);
             initMQTT();
+            if (state.role === 'staff' && 'Notification' in window && Notification.permission === 'default') {
+                Notification.requestPermission().catch(() => {});
+            }
         });
     </script>
 </body>
